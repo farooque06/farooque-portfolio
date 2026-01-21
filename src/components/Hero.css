@@ -1,0 +1,326 @@
+/* ===== HERO SECTION ===== */
+
+.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: var(--space-4xl) var(--space-xl);
+    overflow: hidden;
+}
+
+.hero__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4xl);
+    align-items: center;
+    max-width: 1400px;
+    width: 100%;
+    z-index: 2;
+}
+
+/* Text Content */
+.hero__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.hero__greeting {
+    font-size: 1.2rem;
+    color: var(--accent-cyan);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+.hero__name {
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+}
+
+.hero__title-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.hero__title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.hero__cursor {
+    color: var(--accent-cyan);
+    animation: blink 1s infinite;
+    font-weight: 300;
+}
+
+.hero__description {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    line-height: 1.8;
+}
+
+.hero__cta-group {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* Visual / Avatar */
+.hero__visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero__avatar-container {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero__avatar-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
+        var(--gradient-primary) border-box;
+    animation: spin-slow 20s linear infinite;
+}
+
+.hero__avatar-ring--delayed {
+    width: 85%;
+    height: 85%;
+    animation-direction: reverse;
+    animation-duration: 15s;
+    background: linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
+        var(--gradient-secondary) border-box;
+}
+
+.hero__avatar {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 60px rgba(0, 212, 255, 0.3),
+        0 0 100px rgba(168, 85, 247, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero__avatar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: shimmer 3s infinite;
+    background-size: 200% 100%;
+}
+
+.hero__avatar-text {
+    font-family: var(--font-heading);
+    font-size: 8rem;
+    font-weight: 900;
+    color: var(--bg-primary);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero__avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 15%;
+    /* Move focus higher up to show the face better */
+    border-radius: 50%;
+}
+
+/* Scroll Indicator */
+.hero__scroll {
+    position: absolute;
+    bottom: var(--space-2xl);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.hero__scroll:hover {
+    color: var(--accent-cyan);
+}
+
+.hero__scroll svg {
+    opacity: 0.7;
+}
+
+/* Decorative Elements */
+.hero__decoration {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.hero__decoration--1 {
+    width: 400px;
+    height: 400px;
+    background: var(--accent-cyan);
+    top: -100px;
+    right: -100px;
+    opacity: 0.15;
+}
+
+.hero__decoration--2 {
+    width: 300px;
+    height: 300px;
+    background: var(--accent-purple);
+    bottom: 20%;
+    left: -50px;
+    opacity: 0.15;
+}
+
+.hero__decoration--3 {
+    width: 200px;
+    height: 200px;
+    background: var(--accent-pink);
+    top: 50%;
+    right: 20%;
+    opacity: 0.1;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .hero__content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--space-2xl);
+    }
+
+    .hero__text {
+        align-items: center;
+        order: 2;
+    }
+
+    .hero__visual {
+        order: 1;
+    }
+
+    .hero__description {
+        text-align: center;
+    }
+
+    .hero__cta-group {
+        justify-content: center;
+    }
+
+    .hero__avatar-container {
+        width: 250px;
+        height: 250px;
+    }
+
+    .hero__avatar {
+        width: 180px;
+        height: 180px;
+    }
+
+    .hero__avatar-text {
+        font-size: 5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        padding: var(--space-xl) var(--space-md);
+        padding-top: 100px;
+        min-height: auto;
+        padding-bottom: var(--space-2xl);
+    }
+
+    .hero__content {
+        gap: var(--space-xl);
+    }
+
+    .hero__greeting {
+        font-size: 1rem;
+    }
+
+    .hero__name {
+        font-size: clamp(2.2rem, 12vw, 3rem);
+    }
+
+    .hero__title {
+        font-size: clamp(1rem, 5vw, 1.3rem);
+        flex-wrap: wrap;
+        justify-content: center;
+        min-height: 2em;
+    }
+
+    .hero__description {
+        font-size: 0.9rem;
+        line-height: 1.7;
+    }
+
+    .hero__cta-group {
+        flex-direction: column;
+        width: 100%;
+        gap: var(--space-sm);
+    }
+
+    .hero__cta {
+        width: 100%;
+        justify-content: center;
+        padding: var(--space-md) var(--space-lg);
+        font-size: 0.9rem;
+    }
+
+    .hero__avatar-container {
+        width: 180px;
+        height: 180px;
+    }
+
+    .hero__avatar {
+        width: 130px;
+        height: 130px;
+    }
+
+    .hero__avatar-text {
+        font-size: 3.5rem;
+    }
+
+    .hero__scroll {
+        display: none;
+    }
+
+    .hero__decoration {
+        opacity: 0.08;
+    }
+}
