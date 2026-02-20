@@ -155,14 +155,14 @@ const Contact = () => {
                                 <span className="contact__detail-icon">📧</span>
                                 <div>
                                     <h4>Email</h4>
-                                    <p>far00queapril17@gmail.com</p>
+                                    <p><a href="mailto:far00queapril17@gmail.com" className="contact__link">far00queapril17@gmail.com</a></p>
                                 </div>
                             </div>
                             <div className="contact__detail">
                                 <span className="contact__detail-icon">📱</span>
                                 <div>
                                     <h4>Phone</h4>
-                                    <p>+977-9818998937</p>
+                                    <p><a href="tel:+9779818998937" className="contact__link">+977-9818998937</a></p>
                                 </div>
                             </div>
                         </div>

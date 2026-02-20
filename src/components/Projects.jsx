@@ -22,33 +22,43 @@ const Projects = () => {
         },
         {
             id: 2,
-            title: 'MartBus — Mart Billing System',
+            title: 'BillBaBa — Billing System',
             description: 'Developed a billing and inventory management system using React for the frontend and TYPO3 (PHP) for the backend to manage products, suppliers, and sales efficiently.',
-            image: null,
+            image: '/billbaba-cover.jpg',
             tags: ['React', 'TYPO3', 'PHP', 'MySQL'],
             liveUrl: '#',
-            githubUrl: '#',
+            githubUrl: 'https://github.com/farooque06/MartBis_backend',
             color: '#61DAFB',
         },
         {
             id: 3,
-            title: 'SCHITTLY - German Client Project',
-            description: 'Working on TYPO3 customization, template integration, and extension development for a German client.',
-            image: null,
-            tags: ['TYPO3', 'PHP', 'HTML', 'SCSS'],
+            title: 'Portfolio Website',
+            description: 'Modern, animated portfolio website with 3D elements, smooth scroll, and glassmorphism design.',
+            image: '/portfolio-cover.png',
+            tags: ['React', 'Three.js', 'GSAP', 'Framer Motion'],
             liveUrl: '#',
-            githubUrl: '#',
-            color: '#FF8700',
+            githubUrl: 'https://github.com/farooque06/farooque-portfolio',
+            color: '#00d4ff',
         },
         {
             id: 4,
-            title: 'Portfolio Website',
-            description: 'Modern, animated portfolio website with 3D elements, smooth scroll, and glassmorphism design.',
+            title: 'Construction Project',
+            description: 'Development of a specialized platform for the construction industry, managing workflows and project tracking.',
             image: null,
-            tags: ['React', 'Three.js', 'GSAP', 'Framer Motion'],
+            tags: ['React', 'Node.js', 'PostgreSQL'],
+            liveUrl: '#',
+            githubUrl: 'https://github.com/farooque06/project3-construction',
+            color: '#4CAF50',
+        },
+        {
+            id: 5,
+            title: 'Build Guru',
+            description: 'A comprehensive construction management platform featuring a specialized frontend in Angular and a robust backend in Node.js.',
+            image: '/buildguru-logo.png',
+            tags: ['Angular', 'Node.js', 'Express', 'MongoDB'],
             liveUrl: '#',
             githubUrl: '#',
-            color: '#00d4ff',
+            color: '#FFD700',
         },
     ];
 
@@ -141,9 +151,13 @@ const Projects = () => {
                             style={{ '--project-color': project.color }}
                         >
                             <div className="projects__card-image">
-                                <div className="projects__card-placeholder">
-                                    <span>🚀</span>
-                                </div>
+                                {project.image ? (
+                                    <img src={project.image} alt={project.title} loading="lazy" />
+                                ) : (
+                                    <div className="projects__card-placeholder">
+                                        <span>🚀</span>
+                                    </div>
+                                )}
                                 <div className="projects__card-overlay">
                                     <div className="projects__card-links">
                                         <motion.a
