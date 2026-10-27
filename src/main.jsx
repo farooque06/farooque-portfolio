@@ -1,11 +1,11 @@
-import { StrictMode, useEffect } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import Lenis from 'lenis';
 import App from './App.jsx';
 import './index.css';
 
 // Initialize smooth scroll
-const lenis = new Lenis({
+export const lenis = new Lenis({
   duration: 1.2,
   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
   direction: 'vertical',
@@ -16,6 +16,10 @@ const lenis = new Lenis({
   touchMultiplier: 2,
   infinite: false,
 });
+
+if (typeof window !== 'undefined') {
+  window.__lenis = lenis;
+}
 
 function raf(time) {
   lenis.raf(time);

@@ -2,15 +2,17 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ onOpenCV }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
+    { name: 'Experience', href: '#experience' },
     { name: 'Projects', href: '#projects' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'AI Studio', href: '#ai-studio' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -59,7 +61,7 @@ const Navbar = () => {
                 key={link.name}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.05 }}
               >
                 <a
                   href={link.href}
@@ -70,24 +72,39 @@ const Navbar = () => {
                   }}
                 >
                   {link.name}
+                  {link.name === 'AI Studio' && <span className="navbar__ai-sparkle">✨</span>}
                   <span className="navbar__link-indicator"></span>
                 </a>
               </motion.li>
             ))}
           </ul>
 
-          <motion.a
-            href="#contact"
-            className="navbar__cta btn btn-primary"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection('#contact');
-            }}
-          >
-            Let's Talk
-          </motion.a>
+          <div className="navbar__actions">
+            <button
+              type="button"
+              className="navbar__cv-btn"
+              onClick={onOpenCV}
+              title="View & Download Farooque's Curriculum Vitae"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8" />
+              </svg>
+              <span>CV</span>
+            </button>
+
+            <motion.a
+              href="#contact"
+              className="navbar__cta btn btn-primary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection('#contact');
+              }}
+            >
+              Let's Talk
+            </motion.a>
+          </div>
 
           <button
             className={`navbar__mobile-toggle ${isMobileMenuOpen ? 'active' : ''}`}
@@ -110,7 +127,6 @@ const Navbar = () => {
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 25 }}
           >
-            {/* Close Button */}
             <button
               className="navbar__mobile-close"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -127,7 +143,7 @@ const Navbar = () => {
                   key={link.name}
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                 >
                   <a
                     href={link.href}
@@ -140,6 +156,19 @@ const Navbar = () => {
                   </a>
                 </motion.li>
               ))}
+              <li style={{ marginTop: '20px' }}>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  style={{ width: '100%' }}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onOpenCV();
+                  }}
+                >
+                  View & Download CV (PDF)
+                </button>
+              </li>
             </ul>
           </motion.div>
         )}

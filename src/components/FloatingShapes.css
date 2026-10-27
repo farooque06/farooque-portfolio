@@ -1,0 +1,150 @@
+/* ===== REFINED 3D KINETIC SCULPTURE & DISCREET CONTROLS ===== */
+
+.farooque-3d-canvas-mount {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.88;
+}
+
+.farooque-3d-canvas-mount.interactive {
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.farooque-3d-canvas-mount.interactive:active {
+  cursor: grabbing;
+}
+
+/* Ensure app page contents sit elegantly above the 3D scene */
+main, nav, footer, .intro, .floating-chat-container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Discreet, Minimalist 3D Pill on Bottom-Left (Non-Intrusive, Zero Content Occlusion) */
+.farooque-3d-discreet-control {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1050;
+  pointer-events: auto;
+}
+
+.discreet-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #111522; /* Solid surface per Three.js directives */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+
+.discreet-pill-btn:hover {
+  border-color: var(--accent-cyan);
+  color: #fff;
+  background: #171d30;
+}
+
+.discreet-icon {
+  color: var(--accent-cyan);
+  font-size: 0.85rem;
+}
+
+/* Compact Expanded Menu */
+.discreet-expanded-dock {
+  background: #0f1422;
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 210px;
+}
+
+.dock-row-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 6px;
+}
+
+.dock-title-text {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dock-close-mini {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.dock-close-mini:hover {
+  color: #fff;
+}
+
+.dock-options-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.dock-mini-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  min-width: 45px;
+}
+
+.dock-mini-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dock-mini-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.dock-mini-chip.active {
+  background: rgba(0, 212, 255, 0.18);
+  border-color: var(--accent-cyan);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .farooque-3d-discreet-control {
+    bottom: 16px;
+    left: 16px;
+  }
+}

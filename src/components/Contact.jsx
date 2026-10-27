@@ -16,11 +16,13 @@ const Contact = () => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const socialLinks = [
         { name: 'GitHub', url: 'https://github.com/farooque06', icon: '📦' },
         { name: 'LinkedIn', url: 'https://linkedin.com/in/md-farooque-62191024b', icon: '💼' },
-        { name: 'Email', url: 'mailto:far00queapril17@gmail.com', icon: '📧' },
+        { name: 'Email', url: 'mailto:farooqueallam1@gmail.com', icon: '📧' },
+        { name: 'WhatsApp', url: 'https://wa.me/9779818998937', icon: '💬' },
         { name: 'Instagram', url: 'https://instagram.com/farooque_allam', icon: '📸' },
     ];
 
@@ -115,10 +117,12 @@ const Contact = () => {
 
         if (result.success) {
             setIsSubmitted(true);
+            setErrorMessage('');
             setFormData({ name: '', email: '', subject: '', message: '' });
             setTimeout(() => setIsSubmitted(false), 5000);
         } else {
-            alert("Something went wrong. Please try again later.");
+            setErrorMessage(result.message || "Something went wrong. Please try again later.");
+            setTimeout(() => setErrorMessage(''), 5000);
         }
     };
 
@@ -155,7 +159,7 @@ const Contact = () => {
                                 <span className="contact__detail-icon">📧</span>
                                 <div>
                                     <h4>Email</h4>
-                                    <p><a href="mailto:far00queapril17@gmail.com" className="contact__link">far00queapril17@gmail.com</a></p>
+                                    <p><a href="mailto:farooqueallam1@gmail.com" className="contact__link">farooqueallam1@gmail.com</a></p>
                                 </div>
                             </div>
                             <div className="contact__detail">
@@ -200,6 +204,11 @@ const Contact = () => {
                             </motion.div>
                         ) : (
                             <form className="contact__form" onSubmit={handleSubmit}>
+                                {errorMessage && (
+                                    <div style={{ padding: '0.75rem 1rem', marginBottom: '1rem', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '8px', color: '#fca5a5', fontSize: '0.9rem' }}>
+                                        ⚠️ {errorMessage}
+                                    </div>
+                                )}
                                 <div className="contact__form-group">
                                     <input
                                         type="text"
