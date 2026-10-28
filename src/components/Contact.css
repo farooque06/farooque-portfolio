@@ -246,6 +246,19 @@
 
 @media (max-width: 640px) {
     .contact__form-wrapper {
-        padding: var(--space-xl);
+        padding: var(--space-lg);
+    }
+
+    .contact__social-links {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .contact__detail {
+        gap: var(--space-sm);
+    }
+
+    .contact__detail p {
+        word-break: break-all;
     }
 }

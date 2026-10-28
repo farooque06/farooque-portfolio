@@ -42,95 +42,94 @@ CORE PERSONA & CONVERSATIONAL DIRECTIVES:
    - Format responses cleanly with brief bullet points or concise paragraphs.
 `;
 
-async function startServer() {
-  const app = express();
-  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const app = express();
+const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-  app.use(express.json());
+app.use(express.json());
 
-  // Gemini Client Initialization (User-Agent header required by AI Studio guidelines)
-  const apiKey = process.env.GEMINI_API_KEY || '';
-  const ai = new GoogleGenAI({
-    apiKey: apiKey,
-    httpOptions: {
-      headers: {
-        'User-Agent': 'aistudio-build',
-      },
+// Gemini Client Initialization (User-Agent header required by AI Studio guidelines)
+const apiKey = process.env.GEMINI_API_KEY || '';
+const ai = new GoogleGenAI({
+  apiKey: apiKey,
+  httpOptions: {
+    headers: {
+      'User-Agent': 'aistudio-build',
     },
-  });
+  },
+});
 
-  // AI Endpoint 1: Farooque AI Assistant Chat (Multi-Turn Conversation Memory)
-  app.post('/api/ai/chat', async (req: Request, res: Response) => {
-    try {
-      const { message, history } = req.body;
-      if (!message || typeof message !== 'string') {
-        res.status(400).json({ error: 'Message is required' });
-        return;
-      }
+// AI Endpoint 1: Farooque AI Assistant Chat (Multi-Turn Conversation Memory)
+app.post('/api/ai/chat', async (req: Request, res: Response) => {
+  try {
+    const { message, history } = req.body;
+    if (!message || typeof message !== 'string') {
+      res.status(400).json({ error: 'Message is required' });
+      return;
+    }
 
-      // Format multi-turn conversation history for @google/genai
-      const contents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
+    // Format multi-turn conversation history for @google/genai
+    const contents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
 
-      if (Array.isArray(history) && history.length > 0) {
-        // Limit history to last 10 turns to maintain context without token bloat
-        const recentHistory = history.slice(-10);
-        for (const turn of recentHistory) {
-          const role = (turn.role === 'assistant' || turn.role === 'model') ? 'model' : 'user';
-          const text = typeof turn.text === 'string' ? turn.text : '';
-          if (text) {
-            contents.push({
-              role,
-              parts: [{ text }],
-            });
-          }
+    if (Array.isArray(history) && history.length > 0) {
+      // Limit history to last 10 turns to maintain context without token bloat
+      const recentHistory = history.slice(-10);
+      for (const turn of recentHistory) {
+        const role = (turn.role === 'assistant' || turn.role === 'model') ? 'model' : 'user';
+        const text = typeof turn.text === 'string' ? turn.text : '';
+        if (text) {
+          contents.push({
+            role,
+            parts: [{ text }],
+          });
         }
       }
-
-      // Append current user message
-      contents.push({
-        role: 'user',
-        parts: [{ text: message }],
-      });
-
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: contents,
-        config: {
-          systemInstruction: FAROOQUE_SYSTEM_INSTRUCTION,
-        },
-      });
-
-      const reply = response.text || "Hello! I'm Farooque's AI Twin. Feel free to ask about his projects, experience with React, Angular, Node.js, TYPO3, or how to work together!";
-      res.json({ reply });
-    } catch (err: any) {
-      console.warn('AI Chat error, using contextual trained fallback:', err?.message || err);
-      const msg = (req.body?.message || '').toLowerCase();
-      let fallback = "Hello! I'm Farooque's AI Twin. Farooque has 3 years of full-stack experience in React, Angular, Node.js, PHP, and TYPO3. He's currently with Nirekha Dot Com, handles German enterprise projects for SCHITTLY, and is building SchoolBaba (a multi-tenant school management platform). Feel free to email him at farooqueallam1@gmail.com or WhatsApp him at +977-9818998937!";
-
-      if (msg.includes('project') || msg.includes('schoolbaba') || msg.includes('architecture') || msg.includes('tenant')) {
-        fallback = "Farooque's signature project is **SchoolBaba**, a multi-tenant school management platform engineered with Next.js, Node.js/Express REST APIs, and PostgreSQL. It enforces strict school-scoped tenant query isolation with JWT authentication and bcrypt hashing, alongside bulk student CSV import, role-based access control, and printable report cards. Other key projects include **RestroBaba**, **SportsBaba**, and **MartBus**.";
-      } else if (msg.includes('schittly') || msg.includes('german') || msg.includes('client') || msg.includes('nirekha')) {
-        fallback = "At Nirekha Dot Com (Jan 2023–Present), Farooque has been the lead engineer handling the **SCHITTLY** German client project. His responsibilities include custom TYPO3 extension development, Fluid template integrations, database optimization, and cross-timezone communication meeting European performance standards.";
-      } else if (msg.includes('hire') || msg.includes('contact') || msg.includes('available') || msg.includes('email') || msg.includes('salary') || msg.includes('remote')) {
-        fallback = "Farooque is actively available for full-time remote software engineering roles and high-impact freelance projects! He is based in Kathmandu, Nepal (UTC+5:45) and regularly works across European and US timezones. You can reach him directly at **farooqueallam1@gmail.com** or phone/WhatsApp at **+977-9818998937**.";
-      } else if (msg.includes('education') || msg.includes('bca') || msg.includes('university') || msg.includes('degree')) {
-        fallback = "Farooque graduated with a **Bachelor of Computer Application (BCA)** from Patan Nistha Campus, affiliated with Tribhuvan University, with rigorous coursework in relational database design, data structures, object-oriented programming (C#/Java), and web systems.";
-      }
-
-      res.json({ reply: fallback });
     }
-  });
 
-  // AI Endpoint 2: Project Idea & Architecture Estimator
-  app.post('/api/ai/estimate', async (req: Request, res: Response) => {
-    try {
-      const { projectDescription, projectType } = req.body;
-      if (!projectDescription) {
-        res.status(400).json({ error: 'Project description is required' });
-        return;
-      }
+    // Append current user message
+    contents.push({
+      role: 'user',
+      parts: [{ text: message }],
+    });
 
-      const prompt = `
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents: contents,
+      config: {
+        systemInstruction: FAROOQUE_SYSTEM_INSTRUCTION,
+      },
+    });
+
+    const reply = response.text || "Hello! I'm Farooque's AI Twin. Feel free to ask about his projects, experience with React, Angular, Node.js, TYPO3, or how to work together!";
+    res.json({ reply });
+  } catch (err: any) {
+    console.warn('AI Chat error, using contextual trained fallback:', err?.message || err);
+    const msg = (req.body?.message || '').toLowerCase();
+    let fallback = "Hello! I'm Farooque's AI Twin. Farooque has 3 years of full-stack experience in React, Angular, Node.js, PHP, and TYPO3. He's currently with Nirekha Dot Com, handles German enterprise projects for SCHITTLY, and is building SchoolBaba (a multi-tenant school management platform). Feel free to email him at farooqueallam1@gmail.com or WhatsApp him at +977-9818998937!";
+
+    if (msg.includes('project') || msg.includes('schoolbaba') || msg.includes('architecture') || msg.includes('tenant')) {
+      fallback = "Farooque's signature project is **SchoolBaba**, a multi-tenant school management platform engineered with Next.js, Node.js/Express REST APIs, and PostgreSQL. It enforces strict school-scoped tenant query isolation with JWT authentication and bcrypt hashing, alongside bulk student CSV import, role-based access control, and printable report cards. Other key projects include **RestroBaba**, **SportsBaba**, and **MartBus**.";
+    } else if (msg.includes('schittly') || msg.includes('german') || msg.includes('client') || msg.includes('nirekha')) {
+      fallback = "At Nirekha Dot Com (Jan 2023–Present), Farooque has been the lead engineer handling the **SCHITTLY** German client project. His responsibilities include custom TYPO3 extension development, Fluid template integrations, database optimization, and cross-timezone communication meeting European performance standards.";
+    } else if (msg.includes('hire') || msg.includes('contact') || msg.includes('available') || msg.includes('email') || msg.includes('salary') || msg.includes('remote')) {
+      fallback = "Farooque is actively available for full-time remote software engineering roles and high-impact freelance projects! He is based in Kathmandu, Nepal (UTC+5:45) and regularly works across European and US timezones. You can reach him directly at **farooqueallam1@gmail.com** or phone/WhatsApp at **+977-9818998937**.";
+    } else if (msg.includes('education') || msg.includes('bca') || msg.includes('university') || msg.includes('degree')) {
+      fallback = "Farooque graduated with a **Bachelor of Computer Application (BCA)** from Patan Nistha Campus, affiliated with Tribhuvan University, with rigorous coursework in relational database design, data structures, object-oriented programming (C#/Java), and web systems.";
+    }
+
+    res.json({ reply: fallback });
+  }
+});
+
+// AI Endpoint 2: Project Idea & Architecture Estimator
+app.post('/api/ai/estimate', async (req: Request, res: Response) => {
+  try {
+    const { projectDescription, projectType } = req.body;
+    if (!projectDescription) {
+      res.status(400).json({ error: 'Project description is required' });
+      return;
+    }
+
+    const prompt = `
 A potential client or collaborator is looking to build a project with Farooque Alam.
 Farooque's stack expertise: React, Next.js, Angular, Node.js/Express, PHP/TYPO3, PostgreSQL, MySQL.
 Project Category: ${projectType || 'Web Application'}
@@ -161,54 +160,54 @@ Provide a structured, practical technical architectural proposal formatted in JS
 Return ONLY valid JSON.
 `;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-        config: {
-          responseMimeType: 'application/json',
-          systemInstruction: FAROOQUE_SYSTEM_INSTRUCTION,
-        },
-      });
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+        systemInstruction: FAROOQUE_SYSTEM_INSTRUCTION,
+      },
+    });
 
-      const parsed = JSON.parse(response.text || '{}');
-      res.json({ estimate: parsed });
-    } catch (err: any) {
-      console.warn('AI Estimator fallback:', err?.message || err);
-      res.json({
-        estimate: {
-          summary: `Scalable modern web application architecture tailored for "${req.body?.projectDescription?.slice(0, 40)}..."`,
-          recommendedStack: {
-            frontend: 'Next.js 14 / React with Tailwind CSS & Framer Motion',
-            backend: 'Node.js with Express REST API & TypeScript',
-            database: 'PostgreSQL with relational schema & indexed queries',
-            authAndSecurity: 'JWT Authentication, bcrypt hashing, and Role-Based Access Control (RBAC)',
-          },
-          coreArchitecture: [
-            'Clean separation between frontend client layer and robust backend API services',
-            'Secure authentication pipeline with token refresh and protected route middleware',
-            'Relational database design with normalized models and automated migrations',
-          ],
-          estimatedPhases: [
-            { phase: 'Phase 1: Discovery & Auth Setup', duration: '1-2 weeks', deliverables: 'Schema design, auth endpoints, basic UI layout' },
-            { phase: 'Phase 2: Core Features & Logic', duration: '2-3 weeks', deliverables: 'Main application workflows, dashboard, API integrations' },
-            { phase: 'Phase 3: Polish & Deployment', duration: '1 week', deliverables: 'Cross-browser QA, mobile responsiveness, production deployment' },
-          ],
-          farooqueFit: "Farooque has hands-on production experience building multi-tenant platforms (SchoolBaba), billing tools (MartBus), and custom enterprise client apps.",
+    const parsed = JSON.parse(response.text || '{}');
+    res.json({ estimate: parsed });
+  } catch (err: any) {
+    console.warn('AI Estimator fallback:', err?.message || err);
+    res.json({
+      estimate: {
+        summary: `Scalable modern web application architecture tailored for "${req.body?.projectDescription?.slice(0, 40)}..."`,
+        recommendedStack: {
+          frontend: 'Next.js 14 / React with Tailwind CSS & Framer Motion',
+          backend: 'Node.js with Express REST API & TypeScript',
+          database: 'PostgreSQL with relational schema & indexed queries',
+          authAndSecurity: 'JWT Authentication, bcrypt hashing, and Role-Based Access Control (RBAC)',
         },
-      });
+        coreArchitecture: [
+          'Clean separation between frontend client layer and robust backend API services',
+          'Secure authentication pipeline with token refresh and protected route middleware',
+          'Relational database design with normalized models and automated migrations',
+        ],
+        estimatedPhases: [
+          { phase: 'Phase 1: Discovery & Auth Setup', duration: '1-2 weeks', deliverables: 'Schema design, auth endpoints, basic UI layout' },
+          { phase: 'Phase 2: Core Features & Logic', duration: '2-3 weeks', deliverables: 'Main application workflows, dashboard, API integrations' },
+          { phase: 'Phase 3: Polish & Deployment', duration: '1 week', deliverables: 'Cross-browser QA, mobile responsiveness, production deployment' },
+        ],
+        farooqueFit: "Farooque has hands-on production experience building multi-tenant platforms (SchoolBaba), billing tools (MartBus), and custom enterprise client apps.",
+      },
+    });
+  }
+});
+
+// AI Endpoint 3: Recruiter / Job Compatibility Scorer
+app.post('/api/ai/match', async (req: Request, res: Response) => {
+  try {
+    const { jobDescription } = req.body;
+    if (!jobDescription) {
+      res.status(400).json({ error: 'Job description is required' });
+      return;
     }
-  });
 
-  // AI Endpoint 3: Recruiter / Job Compatibility Scorer
-  app.post('/api/ai/match', async (req: Request, res: Response) => {
-    try {
-      const { jobDescription } = req.body;
-      if (!jobDescription) {
-        res.status(400).json({ error: 'Job description is required' });
-        return;
-      }
-
-      const prompt = `
+    const prompt = `
 You are analyzing how Farooque Alam matches a job description or technical requirement.
 Target Job Description:
 "${jobDescription}"
@@ -232,55 +231,58 @@ Output a JSON object with:
 Return ONLY valid JSON.
 `;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents: prompt,
-        config: {
-          responseMimeType: 'application/json',
-          systemInstruction: FAROOQUE_SYSTEM_INSTRUCTION,
-        },
-      });
-
-      const parsed = JSON.parse(response.text || '{}');
-      res.json({ match: parsed });
-    } catch (err: any) {
-      console.warn('AI Matcher fallback:', err?.message || err);
-      res.json({
-        match: {
-          matchPercentage: 90,
-          matchLevel: 'Strong Match',
-          matchedSkills: ['React', 'Angular', 'Node.js', 'PostgreSQL', 'PHP', 'TYPO3', 'Responsive Design', 'Git'],
-          highlightNotes: [
-            '3+ years full-stack experience in production web apps',
-            'Expertise in both dynamic frontend (React, Angular) and reliable backend (Node.js, PHP, TYPO3)',
-            'Proven track record with international client projects (SCHITTLY) and multi-tenant platforms (SchoolBaba)',
-          ],
-          suggestedInterviewQuestions: [
-            'How did you structure data isolation and role permissions in SchoolBaba?',
-            'What has your experience been collaborating with remote and international clients?',
-          ],
-        },
-      });
-    }
-  });
-
-  // Serve static assets or mount Vite dev middleware
-  if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.resolve(__dirname, 'dist')));
-    app.get('*', (_req, res) => {
-      res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+        systemInstruction: FAROOQUE_SYSTEM_INSTRUCTION,
+      },
     });
-  } else {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
+
+    const parsed = JSON.parse(response.text || '{}');
+    res.json({ match: parsed });
+  } catch (err: any) {
+    console.warn('AI Matcher fallback:', err?.message || err);
+    res.json({
+      match: {
+        matchPercentage: 90,
+        matchLevel: 'Strong Match',
+        matchedSkills: ['React', 'Angular', 'Node.js', 'PostgreSQL', 'PHP', 'TYPO3', 'Responsive Design', 'Git'],
+        highlightNotes: [
+          '3+ years full-stack experience in production web apps',
+          'Expertise in both dynamic frontend (React, Angular) and reliable backend (Node.js, PHP, TYPO3)',
+          'Proven track record with international client projects (SCHITTLY) and multi-tenant platforms (SchoolBaba)',
+        ],
+        suggestedInterviewQuestions: [
+          'How did you structure data isolation and role permissions in SchoolBaba?',
+          'What has your experience been collaborating with remote and international clients?',
+        ],
+      },
     });
-    app.use(vite.middlewares);
   }
+});
 
-  app.listen(port, '0.0.0.0', () => {
-    console.log(`Server listening on http://0.0.0.0:${port}`);
+// Serve static assets in production (Vercel)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.resolve(__dirname, 'dist')));
+  app.get('*', (_req, res) => {
+    res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
   });
 }
 
-startServer();
+// Export app for Vercel serverless function (@vercel/node)
+export default app;
+
+// Local development server startup
+if (process.env.NODE_ENV !== 'production') {
+  createViteServer({
+    server: { middlewareMode: true },
+    appType: 'spa',
+  }).then((vite) => {
+    app.use(vite.middlewares);
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`Server listening on http://0.0.0.0:${port}`);
+    });
+  });
+}

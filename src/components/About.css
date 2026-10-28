@@ -218,18 +218,43 @@
     }
 }
 
+@media (max-width: 768px) {
+    .about__philosophy-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+}
+
 @media (max-width: 640px) {
     .about__highlights {
         grid-template-columns: 1fr;
     }
 
     .about__stats {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-sm);
     }
 
     .about__stat {
-        flex-direction: row;
+        padding: var(--space-md);
+        gap: var(--space-xs);
+    }
+
+    .about__stat-number {
+        font-size: 1.8rem;
+    }
+
+    .about__stat-label {
+        font-size: 0.75rem;
+    }
+
+    .about__actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .about__actions .btn {
+        width: 100%;
         justify-content: center;
-        gap: var(--space-md);
     }
 }

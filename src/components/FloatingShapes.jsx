@@ -547,8 +547,10 @@ const FloatingShapes = () => {
     // 6. Assemble Composite 10-Part Procedural 3D Laptop
     const laptopGroup = new THREE.Group();
     const isDesktop = window.innerWidth > 1024;
-    // Position comfortably to the right on desktop to leave hero text pristine
-    laptopGroup.position.set(isDesktop ? 2.4 : 0, -0.1, 0);
+    const isMobile = window.innerWidth < 768;
+    // Position comfortably to the right on desktop to leave hero text pristine; on mobile, scale cleanly
+    laptopGroup.position.set(isDesktop ? 2.4 : 0, isMobile ? -0.45 : -0.1, 0);
+    laptopGroup.scale.setScalar(isMobile ? 0.78 : 1.0);
     laptopGroup.rotation.set(0.2, -0.35, 0); // Natural 3D isometric presentation angle
     scene.add(laptopGroup);
 
@@ -780,7 +782,10 @@ const FloatingShapes = () => {
     const handleResize = () => {
       if (!container) return;
       const desktop = window.innerWidth > 1024;
+      const isMobile = window.innerWidth < 768;
       laptopGroup.position.x = desktop ? 2.4 : 0;
+      laptopGroup.position.y = isMobile ? -0.45 : -0.1;
+      laptopGroup.scale.setScalar(isMobile ? 0.78 : 1.0);
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);

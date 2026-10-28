@@ -156,11 +156,22 @@ const Navbar = ({ onOpenCV }) => {
                   </a>
                 </motion.li>
               ))}
-              <li style={{ marginTop: '20px' }}>
+              <li style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <a
+                  href="#contact"
+                  className="btn btn-primary"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection('#contact');
+                  }}
+                >
+                  Let's Talk
+                </a>
                 <button
                   type="button"
-                  className="btn btn-primary"
-                  style={{ width: '100%' }}
+                  className="btn btn-outline"
+                  style={{ width: '100%', justifyContent: 'center' }}
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     onOpenCV();

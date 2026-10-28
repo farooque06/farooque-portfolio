@@ -144,7 +144,34 @@ main, nav, footer, .intro, .floating-chat-container {
 
 @media (max-width: 768px) {
   .farooque-3d-discreet-control {
-    bottom: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
     left: 16px;
+  }
+
+  .discreet-expanded-dock {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    max-width: calc(100vw - 32px);
+    min-width: 260px;
+  }
+}
+
+@media (max-width: 520px) {
+  .discreet-pill-btn {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  }
+
+  .discreet-pill-btn span:not(.discreet-icon) {
+    display: none; /* Hide label text on narrow mobile screens to preserve viewport space */
+  }
+
+  .discreet-icon {
+    font-size: 1.15rem;
   }
 }
