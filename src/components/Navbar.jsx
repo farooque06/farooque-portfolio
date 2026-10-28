@@ -48,7 +48,7 @@ const Navbar = ({ onOpenCV }) => {
             whileTap={{ scale: 0.95 }}
             onClick={(e) => {
               e.preventDefault();
-              scrollToSection('#home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
             <span className="navbar__logo-text">Farooque</span>
@@ -68,7 +68,11 @@ const Navbar = ({ onOpenCV }) => {
                   className="navbar__link"
                   onClick={(e) => {
                     e.preventDefault();
-                    scrollToSection(link.href);
+                    if (link.href === '#home') {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                      scrollToSection(link.href);
+                    }
                   }}
                 >
                   {link.name}
@@ -149,7 +153,12 @@ const Navbar = ({ onOpenCV }) => {
                     href={link.href}
                     onClick={(e) => {
                       e.preventDefault();
-                      scrollToSection(link.href);
+                      if (link.href === '#home') {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      } else {
+                        scrollToSection(link.href);
+                      }
+                      setIsMobileMenuOpen(false);
                     }}
                   >
                     {link.name}
